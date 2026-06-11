@@ -1,0 +1,58 @@
+---
+title: "assigment5"
+format: html
+editor: visual
+---
+
+```{r}
+library(ggplot2)
+library(gganimate)
+library(dplyr)
+library(gapminder)
+library(nycflights13)
+```
+
+# Dataset Context
+
+## Gapminder Dataset
+
+The Gapminder data set contains various information about other countries over periods of time inlcuding, GDP per capita. population, and life expectancy as well. The reason I chose this data set was because of the correlation between economic growth and health over periods of time.
+
+## Flights Dataset
+
+The flights dataset contains flight data from the year 2013 including months and delays. I chose this dataset to analyze how many delays tend to happen over time.
+
+# Question 1
+
+How has the relationship between per capita, GDP, and life expectancy changed with time ?
+
+```{r}
+p1 <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  labs(title = "Year: {frame_time}") +
+  transition_time(year)
+
+animate(p1)
+```
+
+# Explanation 1
+
+Countries with a higher overall GDP tend to have higher life expectancies. With time most of the countires will improve in both areas.
+
+# Question 2
+
+How many flight delays increase or decrease across the months?
+
+```{r}
+flights_summary <- flights %>%
+  group_by(month) %>%
+  summarise(delay = mean(arr_delay, na.rm = TRUE))
+
+p2 <- ggplot(flights_summary, aes(month, delay)) +
+  geom_col() +
+  labs(title = "Month: {frame_time}") +
+  transition_states(month)
+
+animate(p2)
+```
